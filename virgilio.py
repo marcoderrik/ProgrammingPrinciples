@@ -9,11 +9,12 @@ class Virgilio:
     def __init__(self, directory):
         self.directory = directory
 
-# es 1 - read_canto_lines per trovare e leggere le righe di un canto
-# es 13- se il parametro strip_lines diventa True aggiungi un controllo che toglie tutto ciò che può essere presente all'inizio o alla fine del verso
-# es 14- fai inserire in iput num_lines e fa in modo che le linee che vengono date in output siano tante quante num_lines ha chiesto
-# es 15- copntrolla che canto_number sia un numero intero
-
+# es 1  - read_canto_lines per trovare e leggere le righe di un canto
+# es 13 - se il parametro strip_lines diventa True aggiungi un controllo che toglie tutto ciò che può essere presente all'inizio o alla fine del verso
+# es 14 - fai inserire in iput num_lines e fa in modo che le linee che vengono date in output siano tante quante num_lines ha chiesto
+# es 15 - copntrolla che canto_number sia un numero intero
+# es 16 - controllo che il numero del canto sia accettabile
+# es 17 - controllo 
     def read_canto_lines(self, canto_number, strip_lines=False, num_lines=None):
         # controllo se canto_number è parte della classe int, se non lo è segnala l'errore
         if not isinstance(canto_number, int):
@@ -46,7 +47,7 @@ class Virgilio:
         verses = self.count_verses(canto_number)
         return verses // 3
 
-# es 4 -  (metodo case sensitive)
+# es 4 - conta quante volte si ripete la parola scelta (metodo case sensitive)
     def count_word(self, canto_number, word):
         # riutilizzo metodo creato nell'es 1
         lines = self.read_canto_lines(canto_number)
@@ -54,7 +55,7 @@ class Virgilio:
         text =",".join(lines)
         return text.count(word)
 
-# es 5 - (metodo case sensitive)
+# es 5 - ottieni la prima riga con la parola  (metodo case sensitive)
     def get_verse_with_word(self, canto_number, word):
         # riutilizzo metodo creato nell'es 1
         lines = self.read_canto_lines(canto_number)
@@ -63,14 +64,13 @@ class Virgilio:
             if word in line:
                 return line
 
-
-# es 6 -  (metodo case sensitive)
+# es 6 - restituisce tutti i versi che contengono la parola (metodo case sensitive)
     def get_verses_with_word(self, canto_number, word):
         # riutilizzo metodo creato nell'es 1
         lines = self.read_canto_lines(canto_number)
         return [line for line in lines if word in line]
 
-# es 7 -
+# es 7 - canto più lungo
     def get_longest_verse(self, canto_number):
         # riutilizzo metodo creato nell'es 1
         lines = self.read_canto_lines(canto_number)
@@ -79,9 +79,12 @@ class Virgilio:
         for line in lines:
             if len(line) > len(longest_line):
                 longest_line = line
+        #se uguali restituisci la prima
+            elif len(line) == len(longest_line):
+                return line
         return longest_line
 
-# es 8 - 
+# es 8 - dizionario che contiente il numero del canto più lungo e quanto è lungo
     def get_longest_canto(self):
         canto_len = 0
         longest_canto = 0
@@ -94,7 +97,7 @@ class Virgilio:
                 longest_canto = canto_number
         return {"canto_number": longest_canto, "canto_len": canto_len}
 
-# es 9 - (case sensitive)
+# es 9 - dizionario che restituisce le parole richieste e quante volte compaiono (case sensitive)
     def count_words(self, canto_number, words = ["vita", "dolente", "porta"]):
         # riutilizzo metodo creato nell'es 2
         lines = self.read_canto_lines(canto_number)
@@ -103,14 +106,14 @@ class Virgilio:
         word_counts = {}
         for word in words:
             word_counts[word] = text.count(word)
-#ES 18 - 
+#ES 18 - salvataggio del risultato dell'esercizio 9 in file json
         json_path = os.path.join(self.directory, "word_counts.json")
         with open(json_path, "w", encoding="utf-8") as json_file:
             json.dump(word_counts, json_file)
         
         return word_counts
 
-# es 10 - 
+# es 10 - restituisce in ordine tutti i canti dell'inferno
     def get_hell_verses(self):
         # creo una lista che tramite l'iterazione della funzione read_canto_lines (es 1) estende la lista popolandola con tutti i versi di ogni canto
         all_verses = []
@@ -118,7 +121,7 @@ class Virgilio:
             all_verses.extend(self.read_canto_lines(canto_number))
         return all_verses
 
-# es 11 - 
+# es 11 - conta tutti i canti
     def count_hell_verses(self):
         '''utilizzata la stessa metodologia dell'es 10 utilizzando invece che i versi letti dalla funzione read_canto_lines (es 1) /
         i versi contati dalla funzione count_verses (es 2)'''
@@ -127,7 +130,7 @@ class Virgilio:
             total_verses += self.count_verses(canto_number)
         return int(total_verses)
 
-# es 12 - 
+# es 12 - calcola la media dei canti
     def get_hell_verse_mean_len(self):
         # utilizzata la funzione creata nell'es 10 per ottenere tutti i versi
         # calcolata la lunghezza di ogni verso tramite un ciclo for e sommate tutte le lunghezze
