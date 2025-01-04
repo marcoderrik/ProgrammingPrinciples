@@ -138,6 +138,6 @@ class Virgilio:
         all_verses = self.get_hell_verses()
         total_length = 0
         for verse in all_verses:
-            total_length += len(verse.strip())  # rimuove spazi
+            total_length += len(verse.strip())
         
         return float(total_length / len(all_verses))
